@@ -7,4 +7,4 @@ python-multipart
 aiofiles
 aiohttp
 Pillow
-scipy 1.1.0 	
+scipy==1.1.0 	
