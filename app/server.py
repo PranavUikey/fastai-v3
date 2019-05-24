@@ -2,7 +2,7 @@ from starlette.applications import Starlette
 from starlette.responses import HTMLResponse, JSONResponse
 from starlette.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
-#import uvicorn, aiohttp, asyncio
+import uvicorn, aiohttp, asyncio
 from pathlib import Path
 from io import BytesIO
 import numpy as np
@@ -13,6 +13,8 @@ from scipy.misc import imread,imresize
 from keras.models import load_model
 import json 
 import tensorflow as tf
+import requests
+import sys
 
 
 # export_file_url = 'https://www.dropbox.com/s/v6cuuvddq73d1e0/export.pkl?raw=1'
@@ -31,7 +33,7 @@ path = Path(__file__).parent
 
 app = Starlette()
 app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
-app.mount('/static', StaticFiles(directory='app/static'))
+app.mount('/static', StaticFiles(directory='static'))
 
 
 def download_file_from_google_drive(id, destination):
