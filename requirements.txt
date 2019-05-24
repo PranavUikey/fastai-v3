@@ -8,4 +8,5 @@ aiofiles
 aiohttp
 Pillow
 scipy==1.1.0
-asyncio 	
+asyncio
+requests 	
