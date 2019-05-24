@@ -8,7 +8,7 @@ import numpy as np
 import re
 import base64
 from PIL import Image
-from scipy.misc import imsave,imread,imresize
+from scipy.misc import imread,imresize
 from keras.models import load_model
 import json 
 import tensorflow as tf
