@@ -79,7 +79,7 @@ def normalize(data):
 
 @app.route('/')
 def index(request):
-"""    html = path/'view'/'index.html'
+    """ html = path/'view'/'index.html'
     return HTMLResponse(html.open().read())"""
     if request.method == "GET":
         html = path/"view"/"index1.html"
