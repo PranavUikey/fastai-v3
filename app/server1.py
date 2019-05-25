@@ -1,9 +1,4 @@
-from starlette.applications import Starlette
-from starlette.responses import HTMLResponse, JSONResponse
-from starlette.staticfiles import StaticFiles
-from starlette.middleware.cors import CORSMiddleware
-import uvicorn, aiohttp, asyncio
-from pathlib import Path
+from flask import Flask, render_template, request
 from io import BytesIO
 import numpy as np
 import re
@@ -30,15 +25,17 @@ classes = ["apple.npy", "book.npy", "cactus.npy", "cake.npy","crown.npy","diamon
          "fish.npy","flower.npy","house.npy","hurricane.npy","ladder.npy","pants.npy","tree.npy"]
 classes = [x.split('.')[0] for x in classes]
 
-path = Path(__file__).parent
+#path = Path(__file__).parent
 
-app = Starlette()
-app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
-app.mount('/static', StaticFiles(directory='static'))
+#app = Starlette()
+#app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['X-Requested-With', 'Content-Type'])
+#app.mount('/static', StaticFiles(directory='static'))
+app = Flask(__name__)
 
 
+graph = tf.get_default_graph()
 def download_file_from_google_drive(id, destination):
-    if destination.exists(): 
+    if destination: 
         return
 
     session = requests.Session()
@@ -68,7 +65,7 @@ def save_response_content(response, destination):
                 f.write(chunk)
 
 def setup_learner():
-    download_file_from_google_drive(file_id, path/export_file_name)
+    download_file_from_google_drive(file_id, export_file_name)
     try:
         learn = load_model(export_file_name)
         return learn
@@ -82,18 +79,18 @@ def normalize(data):
 
 
 @app.route('/',methods = ['GET','POST'])
-async def index(request):
+def index():
     """ html = path/'view'/'index.html'
     return HTMLResponse(html.open().read())"""
     if request.method == "GET":
-        html = path/"view"/"index1.html"
-        return HTMLResponse(html.open().read())
+        #html = path/"view"/"index1.html"
+        return render_template("index1.html")#HTMLResponse(html.open().read())
     if request.method == "POST":
         #data= await request.form()
 
 
-        print('\n payload contains:',request)
-        data = request.form["payload"]
+        print('\n payload contains:',request.form['payload'])
+        data = request.form["payload"].split(",")[1]
         #net = request.form["net"]
         
         img = base64.b64decode(data)
@@ -116,13 +113,15 @@ async def index(request):
 
         # normalize the values between -1 and 1
         x = normalize(x)
-        val = model.predict(np.array([x]))
+        with graph.as_default():
+            val = model.predict(np.array([x]))
+        
         pred = FRUITS[np.argmax(val)]
         #classes = ["Apple", "Banana", "Grape", "Pineapple"]
         print (pred)
         print( list(val[0]))
-        html = path/"view"/"index1.html"
-        return HTMLResponse(html.open().read(), preds=list(val[0]), classes=json.dumps(classes), chart=True, putback=request.form["payload"])
+        #html = path/"view"/"index1.html"
+        return render_template("index1.html", preds=list(val[0]), classes=json.dumps(classes), chart=True, putback=request.form["payload"])
 
 
 """@app.route('/analyze', methods=['POST'])
@@ -134,4 +133,4 @@ async def analyze(request):
     return JSONResponse({'result': str(prediction)})"""
 
 if __name__ == '__main__':
-    if 'serve' in sys.argv: uvicorn.run(app=app, host='0.0.0.0', port=5042)
+    app.run(debug=True,port = 5042)
