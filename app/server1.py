@@ -15,7 +15,7 @@ import multipart
 
 # export_file_url = 'https://www.dropbox.com/s/v6cuuvddq73d1e0/export.pkl?raw=1'
 file_id = '1SGfDjrpHJHxglvE7FilqiN4xIpi4ciix'
-export_file_name = 'fruits.h5'
+export_file_name = 'app/fruits.h5'
 
 FRUITS = {0: "Apple", 1: "Book", 2: "Cactus", 3: "Cake",4:"Crown",5:" Diamond",6:"Donut",7:"Fan",8:"Fish",
           9:"Flower",10:"House",11:"Hurricane",12:"Ladder",13:"Pants",14:"Tree"}
