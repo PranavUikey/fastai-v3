@@ -11,8 +11,8 @@ RUN pip install --no-cache-dir --upgrade -r requirements.txt
 
 COPY app app/
 
-RUN python app/server.py
+RUN python app/server1.py
 
 EXPOSE 5042
 
-CMD ["python", "app/server.py", "serve"]
+CMD ["python", "app/server1.py", "serve"]
